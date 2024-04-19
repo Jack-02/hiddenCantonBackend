@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 80
 
-CMD ["/bin/sh ./start.sh"]
+CMD ["sh", "./start.sh"]
