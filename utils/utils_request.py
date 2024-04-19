@@ -15,5 +15,6 @@ def return_field(obj_dict, field_list):
 
     return {k: v for k, v in obj_dict.items() if k in field_list}
 
-
 BAD_METHOD = request_failed(-3, "Bad method", 405)
+
+NO_PERMISSION = request_failed(-4, "No Permission", 400)

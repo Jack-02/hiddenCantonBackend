@@ -1,2 +1,3 @@
-django
+Django
 uwsgi
+mysqlclient
