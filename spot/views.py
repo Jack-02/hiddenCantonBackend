@@ -25,7 +25,7 @@ def info(req: HttpRequest):
         page = require(req.GET, "page", "int")
         num_per_page = require(req.GET, "num_per_page", "int")
         if "name" in req.GET.keys():
-            spots = Spot.objects.get(name=req.GET["name"])
+            spots = Spot.objects.filter(name=req.GET["name"])
             return_data = {
                 "total_records": spots.count(),
                 "spots": [spot.serialise() for spot in spots[(page - 1) * num_per_page:page * num_per_page]]
@@ -100,17 +100,17 @@ def route(req: HttpRequest):
         page = require(req.GET, "page", "int")
         num_per_page = require(req.GET, "num_per_page", "int")
         if "name" in req.GET.keys():
-            routes = Route.objects.get(name=req.GET["name"])
+            routes = Route.objects.filter(name=req.GET["name"])
             return_data = {
                 "total_records": routes.count(),
-                "spots": [route.serialise() for route in routes[(page - 1) * num_per_page:page * num_per_page]]
+                "routes": [route.serialise() for route in routes[(page - 1) * num_per_page:page * num_per_page]]
             }
             return request_success(return_data)
         else:
-            spots = Spot.objects.all()
+            routes = Route.objects.all()
             return_data = {
-                "total_records": spots.count(),
-                "spots": [spot.serialise(True) for spot in spots[(page - 1) * num_per_page:page * num_per_page]]
+                "total_records": routes.count(),
+                "routes": [route.serialise() for route in routes[(page - 1) * num_per_page:page * num_per_page]]
             }
             return request_success(return_data)
     elif req.method == "PUT":
