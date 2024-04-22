@@ -28,14 +28,14 @@ def info(req: HttpRequest):
             spots = Spot.objects.get(name=req.GET["name"])
             return_data = {
                 "total_records": spots.count(),
-                "spots": [spot.serialise(True) for spot in spots[page * num_per_page:(page + 1) * num_per_page]]
+                "spots": [spot.serialise(True) for spot in spots[(page - 1) * num_per_page:page * num_per_page]]
             }
             return request_success(return_data)
         else:
             spots = Spot.objects.all()
             return_data = {
                 "total_records": spots.count(),
-                "spots": [spot.serialise(True) for spot in spots[page * num_per_page:(page + 1) * num_per_page]]
+                "spots": [spot.serialise(True) for spot in spots[(page - 1) * num_per_page:page * num_per_page]]
             }
             return request_success(return_data)
     elif req.method == "PUT":
