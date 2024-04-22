@@ -31,7 +31,7 @@ class Spot(models.Model):
 
 
 class Video(models.Model):
-    cloudid = models.CharField(max_length=50, primary_key=True)
+    cloudid = models.CharField(max_length=50)
     title = models.CharField(max_length=50)
     spot = models.ForeignKey(to=Spot, on_delete=models.CASCADE)
 
@@ -43,7 +43,7 @@ class Video(models.Model):
 
 
 class Audio(models.Model):
-    cloudid = models.CharField(max_length=50, primary_key=True)
+    cloudid = models.CharField(max_length=50)
     title = models.CharField(max_length=50)
     spot = models.ForeignKey(to=Spot, on_delete=models.CASCADE)
 
