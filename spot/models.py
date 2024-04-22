@@ -10,7 +10,7 @@ class Spot(models.Model):
     text = models.TextField()
     quote = models.TextField()
 
-    def serialise(self, verbose):
+    def serialise(self, verbose=True):
         if verbose:
             return {
                 "id": self.id,
@@ -62,7 +62,7 @@ class Route(models.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "spots": [spot.serialise(False) for spot in json.loads(self.spots)]
+            "spots": [Spot.objects.get(id=spot).serialise(False) for spot in json.loads(self.spots)]
         }
 
 class SpotInRoute(models.Model):

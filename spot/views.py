@@ -28,14 +28,14 @@ def info(req: HttpRequest):
             spots = Spot.objects.get(name=req.GET["name"])
             return_data = {
                 "total_records": spots.count(),
-                "spots": [spot.serialise(True) for spot in spots[(page - 1) * num_per_page:page * num_per_page]]
+                "spots": [spot.serialise() for spot in spots[(page - 1) * num_per_page:page * num_per_page]]
             }
             return request_success(return_data)
         else:
             spots = Spot.objects.all()
             return_data = {
                 "total_records": spots.count(),
-                "spots": [spot.serialise(True) for spot in spots[(page - 1) * num_per_page:page * num_per_page]]
+                "spots": [spot.serialise() for spot in spots[(page - 1) * num_per_page:page * num_per_page]]
             }
             return request_success(return_data)
     elif req.method == "PUT":
@@ -95,4 +95,75 @@ def info(req: HttpRequest):
 
 @CheckRequire
 def route(req: HttpRequest):
-    pass
+    identity = req_identity(req)
+    if req.method == "GET":
+        page = require(req.GET, "page", "int")
+        num_per_page = require(req.GET, "num_per_page", "int")
+        if "name" in req.GET.keys():
+            routes = Route.objects.get(name=req.GET["name"])
+            return_data = {
+                "total_records": routes.count(),
+                "spots": [route.serialise() for route in routes[(page - 1) * num_per_page:page * num_per_page]]
+            }
+            return request_success(return_data)
+        else:
+            spots = Spot.objects.all()
+            return_data = {
+                "total_records": spots.count(),
+                "spots": [spot.serialise(True) for spot in spots[(page - 1) * num_per_page:page * num_per_page]]
+            }
+            return request_success(return_data)
+    elif req.method == "PUT":
+        body = json.loads(req.body.decode("utf-8"))
+        if identity < 2:
+            return NO_PERMISSION
+        name = require(body, "name", "string")
+        spots = require(body, "spots", "list")
+        spot_objects = []
+        try:
+            for spot in spots:
+                spot_objects.append(Spot.objects.get(id=spot))
+        except Spot.DoesNotExist:
+            return request_failed(1, "Spot Does Not Exist")
+        route = Route.objects.create(name=name, spots=spots)
+        for spot_object in spot_objects:
+            SpotInRoute.objects.create(route=route, spot=spot_object)
+        return request_success({"id": route.id})
+    elif req.method == "DELETE":
+        body = json.loads(req.body.decode("utf-8"))
+        if identity < 2:
+            return NO_PERMISSION
+        id = require(body, "id", "int")
+        try: 
+            route = Route.objects.get(id=id)
+        except Route.DoesNotExist:
+            return request_failed(1, "Route Does Not Exist")
+        route.delete()
+        return request_success()
+    elif req.method == "POST":
+        body = json.loads(req.body.decode("utf-8"))
+        if identity < 2:
+            return NO_PERMISSION
+        id = require(body, "id", "int")
+        name = require(body, "name", "string")
+        spots = require(body, "spots", "list")
+        try: 
+            route = Route.objects.get(id=id)
+        except Route.DoesNotExist:
+            return request_failed(1, "Route Does Not Exist")
+        spot_objects = []
+        try:
+            for spot in spots:
+                spot_objects.append(Spot.objects.get(id=spot))
+        except Spot.DoesNotExist:
+            return request_failed(1, "Spot Does Not Exist")
+        route.name = name
+        route.spots = spots
+        route.save()
+        for record in SpotInRoute.objects.filter(route=route):
+            record.delete()
+        for spot_object in spot_objects:
+            SpotInRoute.objects.create(route=route, spot=spot_object)
+        return request_success()
+    else:
+        return BAD_METHOD
