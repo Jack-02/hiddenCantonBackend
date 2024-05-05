@@ -9,12 +9,20 @@ def check_spot(body):
     info = require(body, "info", "dict")
     text = require(info, "text", "string")
     quote = require(info, "quote", "string")
+    image = require(info, "image", "list")
     video = require(info, "video", "list")
     audio = require(info, "audio", "list")
+    image_titles = []
     video_titles = []
     audio_titles = []
+    image_cloudids = []
     video_cloudids = []
     audio_cloudids = []
+    for image_single in image:
+        title = require(image_single, "title", "string")
+        cloudid = require(image_single, "cloudid", "string")
+        image_titles.append(title)
+        image_cloudids.append(cloudid)
     for video_single in video:
         title = require(video_single, "title", "string")
         cloudid = require(video_single, "cloudid", "string")
@@ -25,4 +33,4 @@ def check_spot(body):
         cloudid = require(audio_single, "cloudid", "string")
         audio_titles.append(title)
         audio_cloudids.append(cloudid)
-    return name, location, text, quote, video_titles, video_cloudids, audio_titles, audio_cloudids
+    return name, location, text, quote, image_titles, image_cloudids, video_titles, video_cloudids, audio_titles, audio_cloudids

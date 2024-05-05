@@ -19,6 +19,7 @@ class Spot(models.Model):
                 "info": {
                     "text": self.text,
                     "quote": self.quote,
+                    "image": [image.serialise() for image in Image.objects.filter(spot_id=self.id)],
                     "video": [video.serialise() for video in Video.objects.filter(spot_id=self.id)],
                     "audio": [audio.serialise() for audio in Audio.objects.filter(spot_id=self.id)]
                 }
@@ -28,7 +29,17 @@ class Spot(models.Model):
                 "id": self.id,
                 "name": self.name,
             }
+        
+class Image(models.Model):
+    cloudid = models.CharField(max_length=50)
+    title = models.CharField(max_length=50)
+    spot = models.ForeignKey(to=Spot, on_delete=models.CASCADE)
 
+    def serialise(self):
+        return {
+            "cloudid": self.cloudid,
+            "title": self.title
+        }
 
 class Video(models.Model):
     cloudid = models.CharField(max_length=50)
