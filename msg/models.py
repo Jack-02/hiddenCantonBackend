@@ -10,7 +10,7 @@ class Message(models.Model):
     title = models.CharField(max_length=50)
     text = models.TextField()
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    time = models.DateTimeField(default=timezone.now())
+    time = models.DateTimeField(default=timezone.now)
 
     def serialise(self):
         return {
@@ -19,8 +19,8 @@ class Message(models.Model):
             "title": self.title,
             "spots": [info.spot.serialise(verbose=False) for info in SpotInMessage.objects.filter(message=self)],
             "text": self.text,
-            "image": [image.cloudid for image in Image.objects.filter(spot=self)],
-            "video": [video.cloudid() for video in Video.objects.filter(spot=self)],
+            "image": [image.cloudid for image in Image.objects.filter(message=self)],
+            "video": [video.cloudid for video in Video.objects.filter(message=self)],
             "time": self.time
         }
 

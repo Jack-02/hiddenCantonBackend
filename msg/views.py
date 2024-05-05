@@ -65,8 +65,8 @@ def msg(req: HttpRequest):
         return request_success()
     elif req.method == "POST":
         body = json.loads(req.body.decode("utf-8"))
-        page = require(req.GET, "page", "int")
-        num_per_page = require(req.GET, "num_per_page", "int")
+        page = require(body, "page", "int")
+        num_per_page = require(body, "num_per_page", "int")
         messages = Message.objects.all()
         if "user" in body.keys():
             messages = messages.filter(user=body["user"])
