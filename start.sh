@@ -1,4 +1,4 @@
-python3 manage.py makemigrations
+python3 manage.py makemigrations user spot msg
 python3 manage.py migrate
 
 # Run with uWSGI

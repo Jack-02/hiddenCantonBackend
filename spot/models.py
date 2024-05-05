@@ -19,9 +19,9 @@ class Spot(models.Model):
                 "info": {
                     "text": self.text,
                     "quote": self.quote,
-                    "image": [image.serialise() for image in Image.objects.filter(spot_id=self.id)],
-                    "video": [video.serialise() for video in Video.objects.filter(spot_id=self.id)],
-                    "audio": [audio.serialise() for audio in Audio.objects.filter(spot_id=self.id)]
+                    "image": [image.serialise() for image in Image.objects.filter(spot=self)],
+                    "video": [video.serialise() for video in Video.objects.filter(spot=self)],
+                    "audio": [audio.serialise() for audio in Audio.objects.filter(spot=self)]
                 }
             }
         else:
