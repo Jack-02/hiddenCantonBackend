@@ -21,5 +21,6 @@ from django.urls import include
 
 urlpatterns = [
     path("api/user/", include("user.urls")),
-    path("api/spot/", include("spot.urls"))
+    path("api/spot/", include("spot.urls")),
+    path("api/msg/", include("msg.urls"))
 ]
